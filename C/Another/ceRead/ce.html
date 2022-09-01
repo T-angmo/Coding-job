@@ -1,0 +1,233 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title> C Programming - File Input/Output   </title>
+
+    
+    
+    
+    <!-- FIXME: change the hardcoded www.cs.utah.edu/... refs below to be relative -->
+
+<!-- Main CSS -->
+<link href="https://www.cs.utah.edu/~germain/Styles/topics.css" rel="stylesheet" type="text/css"/>
+
+
+  <!-- Lecture/Lab/Assignment Style CSS -->
+  <link href="https://www.cs.utah.edu/~germain/Styles/popups.css"         rel="stylesheet" type="text/css"/>
+   
+
+
+  <!-- For In-line Tabs -->
+  <script type="text/javascript" src="https://www.cs.utah.edu/~germain/PPS/JS_Libraries/Tab_Panes/tabpane.js"></script>
+  <link type="text/css" rel="StyleSheet" href="https://www.cs.utah.edu/~germain/PPS/JS_Libraries/Tab_Panes/tab.webfx.css" />
+
+  
+
+  <!-- For Syntax Highlighting -->
+  <script type="text/javaScript" src="https://www.cs.utah.edu/~germain/PPS/JS_Libraries/JQuery/jquery-1.2.3.min.js"></script> 
+  <script type="text/javascript" src="https://www.cs.utah.edu/~germain/PPS/JS_Libraries/Chili/jquery.chili.pack.js"></script>
+  <script type="text/javascript"> 
+    ChiliBook.recipeFolder     = "https://www.cs.utah.edu/~germain/PPS/JS_Libraries/Chili/";  
+    ChiliBook.stylesheetFolder = "https://www.cs.utah.edu/~germain/PPS/JS_Libraries/Chili/";  
+  </script>
+
+  <!-- For code setoff box -->
+  <link href="https://www.cs.utah.edu/~germain/Styles/code_styles.css"    rel="stylesheet" type="text/css"/>
+
+   
+
+
+
+    <meta name="AUTHOR" content="H. James de St. Germain"/>
+  </head>
+
+  <body>
+
+    <!-- Last Updated Fall 2007 -->
+    <!-- H. James de St. Germain -->
+    <!-- University of Utah -->
+
+    <div id="topics_header">
+
+      <h1> File Input and Output in C </h1>
+
+      <p class="synopsis"> In order to read information from a file, or to
+        write information to a file, your program must take the following
+        actions.  1) Create a variable to represent the file.  2) Open the file
+        and store this "file" with the file variable.  3) Use the fprintf or
+        fscanf functions to write/read from the file.</p>
+
+    </div>
+
+    <div id="topics_body">
+
+      <h1> File I/O in C </h1>
+
+      <p>File I/O in C is very similar to Matlab.  There are two main differences.
+        One, we have to type the FILE variable.  Two, we read one value (or a
+        single line of values) at a time, whereas by default in Matlab, you may
+        read many values at once.</p>
+
+      <p> The basic steps for using a File in C are always the same:</p>
+
+      <ol>
+        <li>
+          <p> Create a variable of type "FILE*".</p>
+        </li>
+
+        <li>
+          <p> Open the file using the "fopen" function and assign the "file" to
+          the variable.</p>
+        </li>
+
+        <li>
+          <p> Check to make sure the file was successfully opened by checking
+            to see if the variable == NULL.  If it does, an error has occured.</p>
+        </li>
+
+        <li>
+          <p> Use the fprintf or fscanf functions to write/read from the file.
+            Usually these function calls are placed in a loop.  In the case of
+            reading data, usually, the data is read in and placed in an array,
+            but sometimes we process the data "on the fly" (i.e., we do not
+            store the data, we process it and create a result directly before
+            reading any more data. </p>
+        </li>
+      </ol>
+
+      <h2> Example Code </h2>
+
+      <p>Here are examples of the basic syntax for opening a file and writing
+        to or reading from it:</p>
+
+      <pre class="code">
+        <code class="cplusplus">
+
+          FILE *in_file  = fopen("name_of_file", "r"); // read only
+          FILE *out_file = fopen("name_of_file", "w"); // write only
+          
+          // test for files not existing.
+          if (in_file == NULL || out_file == NULL)
+            {  
+              printf("Error! Could not open file\n");
+              exit(-1); // must include stdlib.h
+            }
+          
+          <em class="comment">// write to file vs write to screen</em>
+          fprintf(file, "this is a test %d\n", integer); // write to file
+
+          fprintf(stdout, "this is a test %d\n", integer); // write to screen 
+          printf(         "this is a test %d\n", integer); // write to screen 
+
+          <em class="comment">// read from file/keyboard. remember the ampersands! </em>
+          fscanf(file, "%d %d", &amp;int_var_1, &amp;int_var_2); 
+
+          fscanf(stdin, "%d %d", &amp;int_var_1, &amp;int_var_2); 
+          scanf(        "%d %d", &amp;int_var_1, &amp;int_var_2);
+          
+        </code>
+      </pre>
+
+      <p>Here is a comparison between reading from a file in Matlab and in C:</p>
+
+      <div class="tab-pane" id="tab-pane-1">
+        <div class="tab-page">
+          <h2 class="tab">C Language</h2>
+          <pre class="code">
+            <code class="cplusplus">
+          //
+          //
+          // C code to read a bunch of integers from a file...
+          //
+          //
+
+          int number;
+
+          FILE* in_file = fopen("name_of_file", "r"); // read only 
+        
+          if (! in_file ) // equivalent to saying if ( in_file == NULL )
+             { 
+                printf("oops, file can't be read\n");
+                exit(-1);
+             }
+
+          // attempt to read the next line and store
+          // the value in the "number" variable
+          while ( fscanf(file, "%d", &amp; number ) == 1 ) 
+             {
+               printf("We just read %d\n", number);
+             }
+            </code>
+          </pre>
+        </div>
+
+        <div class="tab-page">
+          <h2 class="tab">Matlab</h2>
+          <pre class="code">
+            <code class="matlab">
+          %
+          % Matlab code to read a bunch of integers from a file...
+          % using fopen and fscanf.  See the Matlab topic of textread
+          % to see how to accomplish this much more easily
+          %
+
+
+
+          in_file = fopen('name_of_file', 'r'); % read only
+
+          if (in_file == -1)
+            error('oops, file can''t be read');
+          end
+
+
+          [number, count] = fscanf(file, '%d', 1);
+
+          while (count == 1) % while we have read a number
+            fprintf('We just read %d\n', number);
+
+            [number, count] = fscanf(file, '%d', 1); % attempt to read the next number
+          end
+            </code>
+          </pre>
+        </div>
+      </div>
+
+      <h2> FGETS function: Read One Line at a Time</h2>
+
+      <p> To read one line from a file (or the keyboard) at a time,
+      use the fgets function.</p>
+
+      <pre class="code">
+	<code class="cplusplus">
+	  char line[100];
+	  fgets( line, 100, stdin );    // stdin - keyboard
+	</code>
+      </pre>
+
+      <p> fgets places the "\n" (newline) at the end of the line. Thus if we type in
+      "hello", what really goes into the variable line is [ 'h', 'e', 'l', 'l', 'o', '\n', '\0' ] </p>
+
+      <p> fgets returns the keyword <b>null</b> on error.  Thus we often use:</p>
+
+      <pre class="code">
+        <code class="cplusplus">
+          char line[100];
+          while ( fgets( line, 100, stdin ) != null )
+            {
+              fprintf("The line is: %s\n", line);
+            }
+        </code>
+      </pre>
+      
+    </div>
+
+    
+
+<hr/>
+
+<a href="https://www.cs.utah.edu/~germain/PPS/Topics/index.html"> Back to Topics List </a>
+
+
+  </body>
+
+</html>
